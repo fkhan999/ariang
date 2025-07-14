@@ -1,17 +1,29 @@
-      - name: Checkout repo
+name: AriaNg Daily Hash
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at 00:00 UTC
+  workflow_dispatch:      # Allow manual trigger
+
+jobs:
+  hash_check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Append to hash log
+      - name: Compute hash and update log
         run: |
           URL="https://github.com/mayswind/AriaNg-DailyBuild/archive/master.zip"
           TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
           HASH=$(curl -Ls "$URL" | shasum -a 256 | awk '{print $1}')
           echo "$TIMESTAMP $HASH" >> hash_log.txt
 
-      - name: Commit and push
+      - name: Commit and push changes
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add hash_log.txt
-          git commit -m "Daily hash log update: $TIMESTAMP" || echo "No changes"
+          git commit -m "Update hash log: $TIMESTAMP" || echo "No changes to commit"
           git push
