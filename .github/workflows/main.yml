@@ -1,9 +1,12 @@
 name: AriaNg Daily Hash
 
+permissions:
+  contents: write  # 👈 Grant write access for pushing commits
+
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at 00:00 UTC
-  workflow_dispatch:      # Allow manual trigger
+    - cron: '0 0 * * *'  # Every day at midnight UTC
+  workflow_dispatch:      # Manual trigger option
 
 jobs:
   hash_check:
@@ -27,3 +30,5 @@ jobs:
           git add hash_log.txt
           git commit -m "Update hash log: $TIMESTAMP" || echo "No changes to commit"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
