@@ -39,3 +39,4 @@ jobs:
           git add hash_log.txt
           git commit -m "Update AriaNg DailyBuild hash"
           git push
+          curl -d "There is a new update of AriaNg boss 😀" https://ntfy.sh/dd-app
